@@ -28,44 +28,54 @@ afterEach(() => {
 
 
 
-test('O parágrafo existe', () => {
-  const list = screen.getAllByText("Me altere, por favor!");
-  expect(list.length).toBe(1)
+test('O campo para o nome do usuário existe', () => {
+  const emailInput = screen.getByRole("textbox");
+  expect(emailInput).toBeDefined()
 })
 
-test('O botão existe', () => {
-  const list = screen.getAllByText("Editar parágrafo");
-  expect(list.length).toBe(1)
+test('O campo para a senha do usuário existe', () => {
+  const passwordInput = document.querySelector("[type='password']");
+  expect(passwordInput).toBeDefined()
 })
 
-test('Ao clicar no botão o parágrafo se tornar editável', () => {
-  const button = screen.getByText("Editar parágrafo");
-  const paragrafo = screen.getByText("Me altere, por favor!");
-  button.click()
-  expect(paragrafo.contentEditable).toBe(true)  
+test('O botão de submit existe', () => {
+  const button = document.querySelector("[type='submit']");
+  expect(button).toBeDefined()
 })
 
-
-test('Ao clicar no botão quando o parágrafo estiver editável deve torná-lo não editável', () => {
-  const button = screen.getByText("Editar parágrafo");
-  const paragrafo = screen.getByText("Me altere, por favor!");
-  button.click()
-  expect(paragrafo.contentEditable).toBe(true)  
-  button.click()
-  expect(paragrafo.contentEditable).toBe(false)  
+test('O campo para o nome do usuário deve ser obrigatorio', () => {
+  const emailInput = screen.getByRole("textbox");
+  expect(emailInput.required).toBe(true)
 })
 
+test('O campo para a senha do usuário deve ser obrigatório', () => {
+  const passwordInput = document.querySelector("[type='password']");
+  expect(passwordInput.required).toBe(true)
+})
 
-test('Alterando o conteúdo do parágrafo', () => {
-  let button = screen.getByText("Editar parágrafo");
-  const paragrafo = screen.getByText("Me altere, por favor!");
-  button.click()
-  expect(paragrafo.contentEditable).toBe(true)
-  button = screen.getByText('Salvar mudança')
-  paragrafo.innerHTML = "AA"
-  button.click()
-  expect(paragrafo.contentEditable).toBe(false)  
-  expect(paragrafo.innerHTML).toBe("AA")
-  button = screen.getByText("Editar parágrafo")
-  expect(button).not.toBeNull()
+test('O login do usuário deve ser um email válido', () => {
+  const emailInput = screen.getByRole("textbox");
+  expect(emailInput.type).toBe("email")
+})
+
+test('O tamanho mínino da senha deve ser de 6 caracteres', () => {
+  const passwordInput = document.querySelector("[type='password']");
+  expect(passwordInput.minLength).toBe(6)
+})
+
+test('O botão de submit deve estar inicialmente desabilitado', () => {
+  const button = document.querySelector("[type='submit']");
+  expect(button.disabled).toBeDefined()
+})
+
+test('Ao preencher ambos os campos, o botão de submit deve ser ativado', () => {
+  const emailInput = screen.getByRole("textbox");
+  const passwordInput = document.querySelector("[type='password']");
+  const button = document.querySelector("[type='submit']");
+
+  fireEvent.input(emailInput, { target: { value: 'brunomateus@mail.com'}})
+  expect(button.disabled).toBeDefined()
+
+  fireEvent.input(passwordInput, { target: { value: '123456'}})
+  expect(button.disabled).toBeFalsy()
 })
